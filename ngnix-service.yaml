@@ -1,0 +1,14 @@
+apiVerison: v1
+kind: Service
+metadata:
+  name: ngnix-service
+  namespace: django-app
+  labels:
+    app: ngnix-svc
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 3005
+  selector:
+    app: ngnix

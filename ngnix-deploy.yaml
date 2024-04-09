@@ -1,0 +1,33 @@
+apiVersion: app/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: django-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+    template:
+      metadata:
+        labels:
+          app: nginx
+      spec:
+        volumes:
+          - name: nginx
+            configMap: ngnix-cm
+          - name : staticfiles
+          persistentVolumeClaim:
+            claimname: staticfiles-pvc
+        containers:
+          name: ngnix
+          image: ngnix:1.25
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            mountPath: /etc/ngnix/conf.d/default.conf
+            subPath: default.conf
+            name: ngnix
+            readOnly: True
+            mountPath: "/data/static"
+            name: staticfiles

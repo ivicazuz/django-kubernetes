@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: django-db-migrations
+  namespace: django-app
+spec:
+  ttlSecondsAfterFinished: 100
+  activeDeadLineSeconds: 60
+
+  template:
+    spec:
+      containers:
+        - name: migration-container
+          image: ivicazuz/django-kubernetes:1.0
+          command: ['python', 'manage.py', 'migrate']
+          imagePulPolicy: Always
+          envFrom:
+            configMapRef: app-cm
+          ports:
+            - containerPort: 8000
+      restartPolicy: OnFailure
+  bacofflimit: 15
